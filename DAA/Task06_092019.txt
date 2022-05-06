@@ -1,0 +1,21 @@
+// returns an array with topo sorted vertices 
+topoSort(G=(V, E)) { 
+    // ...
+    TSort-Kahn(G);
+} // Theta(n + m)
+
+void makeFullyDirected(G=(V, E) with V=[1...n]) {
+    T[1...n] = topoSort(G);
+
+    foreach (v in T[1...n]) {
+        foreach(e in v.edges) {
+            if (not isOriented(e)) {
+                if (v < e.otherVertex) {
+                    orientEdge(e, start = v, end = otherVertex)
+                } else {
+                    orientEdge(e, start = otherVertex, end = v)
+                }
+            }
+        }
+    }
+} // Theta(n + m)
