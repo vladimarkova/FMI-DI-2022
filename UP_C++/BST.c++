@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <queue>
 using std::cout;
 
 struct Node {
@@ -132,6 +133,20 @@ private:
         postOrderHelper(root->left, path);
         postOrderHelper(root->right, path);
         path.push_back(root->val);
+    }
+    static void BFS(const Node* root, std::vector<int>& path) {
+        if (!root) {
+            return;
+        }
+        std::queue<const Node*> q;
+        q.push(root);
+        while(!q.empty()) {
+            const Node* front = q.front();
+            q.pop();
+            path.push_back(front->val);
+            q.push(front->left);
+            q.push(front->right);
+        }
     }
     static void eraseHelper(Node*& root, int val) {
         if (root->val == val) {
