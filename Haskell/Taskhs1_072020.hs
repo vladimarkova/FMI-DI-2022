@@ -1,25 +1,15 @@
--- (\l -> (fromIntegral (foldl (+) 0 l)) / (fromIntegral (length l))) [10, 20, 30, 40]
+-- minFst t1 t2 = if ((fst t1) < (fst t2)) then t1 else t2
+-- getSlope ((d1, h1), (d2, h2)) = abs ((h2 - h1) / (d2 - d1))
 
--- avg l = (foldl (+) 0 l) / (length l)
+argMin :: ([(Integer, Integer)] -> Double) -> [[(Integer, Integer)]] -> [(Integer, Integer)]
+argMin f l = fst $ foldl (\t1 t2 -> if ((snd t1) < (snd t2)) then t1 else t2) ([], maximum (map f l) + 1) $ map (\e -> (e, f e)) l
 
--- \(x, y, z) -> y
+maxSlope :: [(Integer, Integer)] -> Double
+maxSlope track = maximum (map (\((d1, h1), (d2, h2)) -> abs ((fromIntegral (h2 - h1)) / (fromIntegral (d2 - d1)))) (zip track (tail track)))
 
-recommender pl = \(pA, pT, pD) ->
-    let avgDuration artist = (\l -> (fromIntegral (foldl (+) 0 l)) / (fromIntegral (length l))) (map (\(a, t, d) -> d) (filter (\(a, t, d) -> a == artist)  pl))
-        option1 = filter (\(a, t, d) -> a == pA && d > pD) pl
-        option2 = filter (\(a, t, d) -> avgDuration a < avgDuration pA) pl
-    in if not (null option1) then ((\(x, y, z) -> y) $ head option1)
-        else if not (null option2) then ((\(x, y, z) -> y) $ head option2)
-            else if not (null (filter (\(a, t, d) -> d > pD) pl)) 
-                    then ((\(x, y, z) -> y) $ head (filter (\(a, t, d) -> d > pD) pl))
-                    else pT
+tracks1 = [[(0, 900), (100, 910), (200, 925), (300, 905), (600, 950)], [(0, 1300), (100, 1305), (500, 1340), (800, 1360), (1000, 1320)], [(0, 800), (200, 830), (300, 845), (600, 880), (800, 830)]]
 
-rf = recommender [("Mozart","The Marriage of Figaro Overture",270), 
-    ("Gershwin","Summertime", 300), 
-    ("Queen","Bohemian Rhapsody",355), 
-    ("Gershwin","Rhapsody in Blue",1100)]
+easiestTrackUnder :: Integer -> [[(Integer, Integer)]] -> [(Integer, Integer)]
+easiestTrackUnder maxLen tracks = argMin maxSlope (filter (\t -> (fst (last t) - fst (head t)) < maxLen) tracks)
 
-main = print (rf ("Mozart","The Marriage of Figaro Overture",270))
-
--- rf ("Gershwin", "Summertime", 300)
--- rf ("Gershwin", "Rhapsody in Blue", 1100)
+main = print (easiestTrackUnder 800 tracks1)

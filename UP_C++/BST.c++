@@ -72,6 +72,9 @@ public:
         }
         cout << '\n';
     }
+    void BFSWithLevels(std::vector<int>& vertices) const {
+        BFS(root, vertices);
+    }
 private:
     static void insertHelper(Node*& root, int val) {
         if (!root) {
@@ -140,14 +143,36 @@ private:
         }
         std::queue<const Node*> q;
         q.push(root);
+        int numberOfNodesOnCurrentLevel, numberOfNodesOnNextLevel = 0;
+        int level = 0; 
+
         while(!q.empty()) {
+            int nodesInQueue = q.size();
+
             const Node* front = q.front();
             q.pop();
+            numberOfNodesOnCurrentLevel--;
             path.push_back(front->val);
-            q.push(front->left);
-            q.push(front->right);
+    
+            if (front->left) {
+                q.push(front->left);
+                numberOfNodesOnNextLevel++;
+            }
+            if (front->right) {
+                q.push(front->right);
+                numberOfNodesOnNextLevel++;
+            }
+
+            if (!numberOfNodesOnCurrentLevel) {
+                numberOfNodesOnCurrentLevel = numberOfNodesOnNextLevel;
+                numberOfNodesOnNextLevel = 0;
+                std::cout << '\n';
+                std::cout << "level: " << level << '\n';
+                level++;
+            }
         }
     }
+
     static void eraseHelper(Node*& root, int val) {
         if (root->val == val) {
             if (!root->left && !root->right) {
@@ -211,6 +236,22 @@ private:
     }
 };
 
+void createTreeHelper(int* arr, int size, Node*& root) {
+    if (!size) {
+        return;
+    }
+    int index = size / 2;
+    root = new Node(arr[index], nullptr, nullptr);
+    createTreeHelper(arr, index, root->left);
+    createTreeHelper(arr + index + 1, size - index - 1, root->right);
+}
+
+Node* createTree(int* arr, int size) {
+    Node* root = nullptr; 
+    createTreeHelper(arr, size, root);
+    return root;
+}
+
 int main() {
     BST tree;
     tree.insert(9);
@@ -229,6 +270,9 @@ int main() {
 
     tree.print();
 
+    std::cout << '\n';
+    std::vector<int> vertices;
+    tree.BFSWithLevels(vertices);
 
     return 0;
 }

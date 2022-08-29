@@ -7,9 +7,9 @@ public:
     Animal() {
         std::cout << 'A' << '\n';
     }
-    // Animal(const Animal& other) {
-    //     std::cout << "Called Copy A" << '\n';
-    // }
+    Animal(const Animal& other) {
+        std::cout << "Called Copy A" << '\n';
+    }
     void talk() {
         std::cout << "Animal talking..." << '\n';
     }
@@ -39,6 +39,13 @@ public:
     }
     Cat(Cat&& other) { 
         std::cout << "in cat move ctor" << std::endl;
+    }
+    Cat& operator=(const Cat& other) {
+        if (this != &other) {
+            std::cout << "Cat operator=" << std::endl;
+            furThickness = other.furThickness;
+        }
+        return *this;
     }
     void talk() {
          std::cout << "Meow..." << '\n';
@@ -130,10 +137,21 @@ int main() {
     // Cat* c4 = (Cat*)a4;
     // c4->present();
 
-    Cat c5;
-    c5.setWeight(40);
-    Cat c6(c5);
-    std::cout << c6.getWeight() << '\n';
+    // Cat c5;
+    // c5.setWeight(40);
+    // Cat c6(c5);
+    // std::cout << c6.getWeight() << '\n';
+
+    // Cat* myCat = new Cat;
+    // Cat* myCats = new Cat[3];
+
+    // delete myCat;
+    // delete[] myCats;
+
+    Cat c1;
+    Cat c3;
+    Cat c2 = c1;
+    c3 = c2;
 
     return 0;
 }
