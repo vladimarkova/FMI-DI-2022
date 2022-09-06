@@ -11,7 +11,7 @@ struct Node {
     }
 };
 
-void deleteTree(Node* root) {
+void deleteTree(Node*& root) {
     if (root == nullptr) {
         return;
     }
